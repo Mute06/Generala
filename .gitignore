@@ -1,0 +1,7 @@
+# Ignore CLion and CMake build files
+cmake-build-debug/
+cmake-build-release/
+.idea/
+CMakeCache.txt
+CMakeFiles/
+Makefile
