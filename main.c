@@ -5,31 +5,65 @@
 
 int rollDice();
 int decideWhoStarts();
-int play_user();
+int play_user(int);
 int play_computer();
 int calculateScore();
+void scoresheet(int playerScore, int computerScore);
 int howManyAreEqual(int dice1, int dice2, int dice3, int dice4, int dice5);
 int checkForFullHouse(int d1, int d2, int d3, int d4, int d5);
+int checkForStraight(int d1, int d2, int d3, int d4, int d5);
+int doesItHaveThisValue(int value,int d1,int d2, int d3,int d4,int d5);
+int mostRepeatedNumber(int dice1, int dice2, int dice3, int dice4, int dice5);
+
 
 
 int main(void)
 {
-    int numberOfRounds;
+
+    int numberOfRounds, roundsPlayed = 0;
+    int playerScore = 0;
+    int computerScore = 0;
 
     srand(time(NULL));
-
 
     printf("How many rounds would you like to play? ");
     scanf("%d", &numberOfRounds);
 
-    int isPlayerStarting = decideWhoStarts();
+    int isPlayersTurn = decideWhoStarts();
 
-    if (isPlayerStarting) {
-        play_user();
-    }
-    else {
+    //Main game loop
+    while (roundsPlayed < numberOfRounds)
+    {
+        if (isPlayersTurn)
+        {
+            printf("Round %d --- Your Turn\n",roundsPlayed + 1);
+            printf("-----------------------------------------------------------------------------------------------\n");
 
+            int scoreEarned = play_user(playerScore);
+
+            if (scoreEarned == 50) {
+                //Generala finish the game
+
+            }
+            playerScore += scoreEarned;
+            isPlayersTurn = 0;
+        }
+        else {
+            printf("Round %d --- Computer's Turn\n",roundsPlayed + 1);
+            printf("-----------------------------------------------------------------------------------------------\n");
+
+            int scoreEarnedComp = play_computer();
+            if (scoreEarnedComp == 50) {
+                //Generala
+            }
+            computerScore += scoreEarnedComp;
+
+            isPlayersTurn = 1;
+        }
+        roundsPlayed++;
     }
+
+    scoresheet(playerScore, computerScore);
 
     return 0;
 }
@@ -52,8 +86,8 @@ int decideWhoStarts()
         int startDiceComp_2 = rollDice();
         int startDicePlayer_1 = rollDice();
         int startDicePlayer_2 = rollDice();
-        printf("\nComputer rolled the dice and got: %d and %d",startDiceComp_1,startDiceComp_2);
-        printf("\nYou rolled the dice and got: %d and %d",startDicePlayer_1,startDicePlayer_2);
+        printf("Computer rolled the dice and got: %d and %d\n",startDiceComp_1,startDiceComp_2);
+        printf("You rolled the dice and got: %d and %d\n",startDicePlayer_1,startDicePlayer_2);
 
         playerSum = startDicePlayer_1 + startDicePlayer_2;
         computerSum = startDiceComp_1 + startDiceComp_2;
@@ -69,21 +103,64 @@ int decideWhoStarts()
 
 }
 
-int play_user()
+
+/*3rd Question: play_user returns an integer. It returns the score the user got in this round
+ *This is because that value is used in main keep track of the total score the user got
+ *Also if it returns 50 it means the user got generala and won the game
+*/
+int play_user(int startingTotalScore)
 {
     int dice1 = rollDice(), dice2 = rollDice(), dice3 = rollDice(), dice4 = rollDice(), dice5 = rollDice();
     printf("You got => [Dice 1:] %d [Dice 2:] %d [Dice 3:] %d [Dice 4:] %d [Dice 5:] %d\n",
         dice1, dice2, dice3, dice4, dice5);
 
+    int score = calculateScore(dice1, dice2, dice3, dice4, dice5);
+    printf("These would give you %d points \nYour total score would be if you don't reroll %d\n",score, startingTotalScore + score);
+
     //Ask user for re roll
     char answer;
     do {
-        printf("Do you want to ReRoll: (Y/N)? ");
+        printf("Do you want to reroll: (Y/N)? ");
         scanf(" %c", &answer);
         getchar(); // To consume newline character
 
         answer = toupper(answer);
-        if (answer == 'Y') {
+
+    } while (answer != 'Y' && answer != 'N');
+
+    if (answer == 'Y') {
+        int diceToKeep1 = 0;
+        int diceToKeep2 = 0;
+
+        printf("Which ones do you want to keep? ");
+        scanf("%d %d",&diceToKeep1, &diceToKeep2);
+
+        //Re-assigning the dice values
+        if (diceToKeep1 != 1 && diceToKeep2 != 1) dice1 = rollDice();
+        if (diceToKeep1 != 2 && diceToKeep2 != 2) dice2 = rollDice();
+        if (diceToKeep1 != 3 && diceToKeep2 != 3) dice3 = rollDice();
+        if (diceToKeep1 != 4 && diceToKeep2 != 4) dice4 = rollDice();
+        if (diceToKeep1 != 5 && diceToKeep2 != 5) dice5 = rollDice();
+
+        printf("\nYou got => [Dice 1:] %d [Dice 2:] %d [Dice 3:] %d [Dice 4:] %d [Dice 5:] %d\n",
+            dice1, dice2, dice3, dice4, dice5);
+
+        score = calculateScore(dice1, dice2, dice3, dice4, dice5);
+        printf("These would give you %d points \nYour total score will be %d\n",score, startingTotalScore + score);
+
+        //Ask for a second reroll
+        char answer2;
+        do {
+            printf("Do you want to reroll: (Y/N)? ");
+            scanf(" %c", &answer2);
+            getchar(); // To consume newline character
+
+            answer2 = toupper(answer2);
+
+        } while (answer2 != 'Y' && answer2 != 'N');
+
+        if (answer2 == 'Y')
+        {
             int diceToKeep1;
             int diceToKeep2;
 
@@ -100,13 +177,29 @@ int play_user()
             printf("\nYou got => [Dice 1:] %d [Dice 2:] %d [Dice 3:] %d [Dice 4:] %d [Dice 5:] %d\n",
                 dice1, dice2, dice3, dice4, dice5);
 
-
+            score = calculateScore(dice1, dice2, dice3, dice4, dice5);
+            printf("These would give you %d points \nYour total score will be %d\n",score, startingTotalScore + score);
         }
-        else if (answer == 'N') {
 
-        }
-    } while (answer != 'Y' && answer != 'N');
 
+
+    }
+    else if (answer == 'N') {
+
+    }
+
+    return score;
+}
+
+
+
+int doesItHaveThisValue(int value,int d1,int d2, int d3,int d4,int d5)
+{
+    int result = 0;
+    if (value == d1 || value == d2 || value == d3 || value == d4 || value == d5) {
+        result = 1;
+    }
+    return result;
 }
 
 int howManyAreEqual(int dice1, int dice2, int dice3, int dice4, int dice5)
@@ -127,10 +220,44 @@ int howManyAreEqual(int dice1, int dice2, int dice3, int dice4, int dice5)
 
     return maxCount;
 }
+/* Returns the most repeated dice value
+ * if it has more than 1 most repeated dice value it will return the bigger one
+ */
+int mostRepeatedNumber(int dice1, int dice2, int dice3, int dice4, int dice5)
+{
+    int maxCount = 1;
+    int mostRepeatedValue = dice1;
+
+    int count1 = (dice1 == dice2) + (dice1 == dice3) + (dice1 == dice4) + (dice1 == dice5) + 1;
+    int count2 = (dice2 == dice3) + (dice2 == dice4) + (dice2 == dice5) + 1;
+    int count3 = (dice3 == dice4) + (dice3 == dice5) + 1;
+    int count4 = (dice4 == dice5) + 1;
+
+    if (count1 > maxCount  || (count1  == maxCount && dice1 > mostRepeatedValue))
+    {
+        maxCount = count1;
+        mostRepeatedValue = dice1;
+    }
+    if (count2 > maxCount || (count2 == maxCount && dice2 > mostRepeatedValue)) {
+        maxCount = count2;
+        mostRepeatedValue = dice2;
+    }
+    if (count3 > maxCount || (count3 == maxCount && dice3 > mostRepeatedValue)) {
+        maxCount = count3;
+        mostRepeatedValue = dice3;
+    }
+    if (count4 > maxCount || (count4 == maxCount && dice4 > mostRepeatedValue)) {
+        maxCount = count4;
+        mostRepeatedValue = dice4;
+    }
+
+    return mostRepeatedValue;
+}
 
 int calculateScore(int dice1, int dice2, int dice3, int dice4, int dice5)
 {
     int equalDiceNumber = howManyAreEqual(dice1, dice2, dice3, dice4, dice5);
+    int mostRepeated = mostRepeatedNumber(dice1, dice2, dice3, dice4, dice5);
 
     //All are equal (Generala)
     if (equalDiceNumber == 5) {
@@ -149,30 +276,103 @@ int calculateScore(int dice1, int dice2, int dice3, int dice4, int dice5)
         }
     }
 
+    //Straight
+    if (checkForStraight(dice1, dice2, dice3, dice4, dice5)) {
+        return 20;
+    }
 
+    //No repeated number
+    if (mostRepeated == 1) {
+        return 1;
+    }
+
+    // Normal Calculation
+    return  mostRepeated * equalDiceNumber;
+
+}
+
+int checkForStraight(int d1, int d2, int d3, int d4, int d5)
+{
+    // 1 2 3 4 5
+    if (doesItHaveThisValue(1, d1, d2, d3, d4, d5) && doesItHaveThisValue(2, d1, d2, d3, d4, d5)
+        && doesItHaveThisValue(3, d1, d2, d3, d4, d5) && doesItHaveThisValue(4,d1,d2,d3,d4,d5)
+        && doesItHaveThisValue(5, d1, d2, d3, d4, d5))
+    {
+        return 1;
+    }
+    // 2 3 4 5 6
+    if (doesItHaveThisValue(2,d1,d2,d3,d4,d5) && doesItHaveThisValue(3,d1,d2,d3,d4,d5) && doesItHaveThisValue(4,d1,d2,d3,d4,d5)
+        && doesItHaveThisValue(5,d1,d2,d3,d4,d5) && doesItHaveThisValue(6,d1,d2,d3,d4,d5))
+    {
+        return 1;
+    }
+    return 0;
 }
 
 int checkForFullHouse(int d1, int d2, int d3, int d4, int d5)
 {
-    int count1 = (d1 == d2) + (d1 == d3) + (d1 == d4) + (d1 == d5) + 1;
-    int count2 = (d2 == d3) + (d2 == d4) + (d2 == d5) + 1;
-    int count3 = (d3 == d4) + (d3 == d5) + 1;
-    int count4 = (d4 == d5) + 1;
-
-    if ( (count1 == 3 && count2 == 2) || (count1 == 3 && count3 == 2) || (count1 == 3 && count4 == 2)
-        || (count2 == 3 && count1 == 2) || (count2 == 3 && count3 == 2) || (count2 == 3 && count4 == 2)
-        ||  (count3 == 3 && count1 == 2) || (count3 == 3 && count2 == 2) || (count3 == 3 && count4 == 2)
-        || (count4 == 3 && count1 == 2) || (count4 == 3 && count2 == 2) || (count4 == 3 && count3 == 2))
-        { return 1; }
-
+    if ((d1 == d2 && d1 == d3) && d4 == d5) return 1;
+    if ((d1 == d2 && d1 == d4) && d3 == d5) return 1;
+    if ((d1 == d2 && d1 == d5) && d3 == d4) return 1;
+    if ((d1 == d3 && d1 == d4) && d2 == d5) return 1;
+    if ((d1 == d3 && d1 == d5) && d2 == d4) return 1;
+    if ((d1 == d4 && d1 == d5) && d2 == d3) return 1;
+    if ((d2 == d3 && d2 == d4) && d1 == d5) return 1;
+    if ((d2 == d3 && d2 == d5) && d1 == d4) return 1;
+    if ((d2 == d4 && d2 == d5) && d1 == d3) return 1;
+    if ((d3 == d4 && d3 == d5) && d1 == d2) return 1;
 
     return 0;
-
 }
 
 int play_computer()
 {
-    printf("Computer rolled the dice and got");
     int dice1 = rollDice(), dice2 = rollDice(), dice3 = rollDice(), dice4 = rollDice(), dice5 = rollDice();
 
+    printf("Computer got => [Dice 1:] %d [Dice 2:] %d [Dice 3:] %d [Dice 4:] %d [Dice 5:] %d\n",
+       dice1, dice2, dice3, dice4, dice5);
+
+
+
+    int mostRepeated = mostRepeatedNumber(dice1, dice2, dice3, dice4, dice5);
+    int howManySame = howManyAreEqual(dice1,dice2,dice3,dice4,dice5);
+
+    //Reroll
+    if (howManySame >= 3) {
+
+        int diceToKeep = 1;
+
+        if (dice2 == mostRepeated) {
+            diceToKeep = 2;
+        }
+        else if (dice3 == mostRepeated) {
+            diceToKeep = 3;
+        }
+        else if (dice4 == mostRepeated) {
+            diceToKeep = 4;
+        }
+        else if (dice5 == mostRepeated) {
+            diceToKeep = 5;
+        }
+
+        if (diceToKeep != 1) dice1 = rollDice();
+        if (diceToKeep != 2) dice2 = rollDice();
+        if (diceToKeep != 3) dice3 = rollDice();
+        if (diceToKeep != 4) dice4 = rollDice();
+        if (diceToKeep != 5) dice5 = rollDice();
+
+        printf("Computer rerolled and got => [Dice 1:] %d [Dice 2:] %d [Dice 3:] %d [Dice 4:] %d [Dice 5:] %d\n",
+            dice1, dice2, dice3, dice4, dice5);
+
+    }
+    int score = calculateScore(dice1, dice2, dice3, dice4, dice5);
+    return score;
+
+}
+
+void scoresheet(int playerScore, int computerScore)
+{
+    printf("-----------------------------------------------------------------------------------------------\n");
+    printf("Computer scores: %d\n",computerScore);
+    printf("Player scores: %d\n",playerScore);
 }
