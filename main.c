@@ -3,7 +3,7 @@
 #include <time.h>
 #include <ctype.h>
 
-int rollDice();
+int roll_a_dice();
 int decideWhoStarts();
 int play_user(int);
 int play_computer();
@@ -92,7 +92,7 @@ int main(void)
     return 0;
 }
 //2nd Question: the datatype of the random number generated in this function is integer
-int rollDice()
+int roll_a_dice()
 {
     int dice = rand() % 6 + 1;
     return dice;
@@ -106,10 +106,10 @@ int decideWhoStarts()
 {
     int playerSum = 0, computerSum = 0;
     do {
-        int startDiceComp_1 = rollDice();
-        int startDiceComp_2 = rollDice();
-        int startDicePlayer_1 = rollDice();
-        int startDicePlayer_2 = rollDice();
+        int startDiceComp_1 = roll_a_dice();
+        int startDiceComp_2 = roll_a_dice();
+        int startDicePlayer_1 = roll_a_dice();
+        int startDicePlayer_2 = roll_a_dice();
         printf("Computer rolled the dice and got: %d and %d\n",startDiceComp_1,startDiceComp_2);
         printf("You rolled the dice and got: %d and %d\n",startDicePlayer_1,startDicePlayer_2);
 
@@ -134,7 +134,7 @@ int decideWhoStarts()
 */
 int play_user(int startingTotalScore)
 {
-    int dice1 = rollDice(), dice2 = rollDice(), dice3 = rollDice(), dice4 = rollDice(), dice5 = rollDice();
+    int dice1 = roll_a_dice(), dice2 = roll_a_dice(), dice3 = roll_a_dice(), dice4 = roll_a_dice(), dice5 = roll_a_dice();
     printf("You got => [Dice 1:] %d [Dice 2:] %d [Dice 3:] %d [Dice 4:] %d [Dice 5:] %d\n",
         dice1, dice2, dice3, dice4, dice5);
 
@@ -160,11 +160,11 @@ int play_user(int startingTotalScore)
         scanf("%d %d",&diceToKeep1, &diceToKeep2);
 
         //Re-assigning the dice values
-        if (diceToKeep1 != 1 && diceToKeep2 != 1) dice1 = rollDice();
-        if (diceToKeep1 != 2 && diceToKeep2 != 2) dice2 = rollDice();
-        if (diceToKeep1 != 3 && diceToKeep2 != 3) dice3 = rollDice();
-        if (diceToKeep1 != 4 && diceToKeep2 != 4) dice4 = rollDice();
-        if (diceToKeep1 != 5 && diceToKeep2 != 5) dice5 = rollDice();
+        if (diceToKeep1 != 1 && diceToKeep2 != 1) dice1 = roll_a_dice();
+        if (diceToKeep1 != 2 && diceToKeep2 != 2) dice2 = roll_a_dice();
+        if (diceToKeep1 != 3 && diceToKeep2 != 3) dice3 = roll_a_dice();
+        if (diceToKeep1 != 4 && diceToKeep2 != 4) dice4 = roll_a_dice();
+        if (diceToKeep1 != 5 && diceToKeep2 != 5) dice5 = roll_a_dice();
 
         printf("\nYou got => [Dice 1:] %d [Dice 2:] %d [Dice 3:] %d [Dice 4:] %d [Dice 5:] %d\n",
             dice1, dice2, dice3, dice4, dice5);
@@ -192,11 +192,11 @@ int play_user(int startingTotalScore)
             scanf("%d %d",&diceToKeep1, &diceToKeep2);
 
             //Re-assigning the dice values
-            if (diceToKeep1 != 1 && diceToKeep2 != 1) dice1 = rollDice();
-            if (diceToKeep1 != 2 && diceToKeep2 != 2) dice2 = rollDice();
-            if (diceToKeep1 != 3 && diceToKeep2 != 3) dice3 = rollDice();
-            if (diceToKeep1 != 4 && diceToKeep2 != 4) dice4 = rollDice();
-            if (diceToKeep1 != 5 && diceToKeep2 != 5) dice5 = rollDice();
+            if (diceToKeep1 != 1 && diceToKeep2 != 1) dice1 = roll_a_dice();
+            if (diceToKeep1 != 2 && diceToKeep2 != 2) dice2 = roll_a_dice();
+            if (diceToKeep1 != 3 && diceToKeep2 != 3) dice3 = roll_a_dice();
+            if (diceToKeep1 != 4 && diceToKeep2 != 4) dice4 = roll_a_dice();
+            if (diceToKeep1 != 5 && diceToKeep2 != 5) dice5 = roll_a_dice();
 
             printf("\nYou got => [Dice 1:] %d [Dice 2:] %d [Dice 3:] %d [Dice 4:] %d [Dice 5:] %d\n",
                 dice1, dice2, dice3, dice4, dice5);
@@ -348,7 +348,7 @@ int checkForFullHouse(int d1, int d2, int d3, int d4, int d5)
 
 int play_computer()
 {
-    int dice1 = rollDice(), dice2 = rollDice(), dice3 = rollDice(), dice4 = rollDice(), dice5 = rollDice();
+    int dice1 = roll_a_dice(), dice2 = roll_a_dice(), dice3 = roll_a_dice(), dice4 = roll_a_dice(), dice5 = roll_a_dice();
 
     printf("Computer got => [Dice 1:] %d [Dice 2:] %d [Dice 3:] %d [Dice 4:] %d [Dice 5:] %d\n",
        dice1, dice2, dice3, dice4, dice5);
@@ -363,11 +363,11 @@ int play_computer()
 
         int diceToRoll = findOddDice(dice1, dice2, dice3, dice4, dice5);
 
-        if (diceToRoll == 1) dice1 = rollDice();
-        if (diceToRoll == 2) dice2 = rollDice();
-        if (diceToRoll == 3) dice3 = rollDice();
-        if (diceToRoll == 4) dice4 = rollDice();
-        if (diceToRoll == 5) dice5 = rollDice();
+        if (diceToRoll == 1) dice1 = roll_a_dice();
+        if (diceToRoll == 2) dice2 = roll_a_dice();
+        if (diceToRoll == 3) dice3 = roll_a_dice();
+        if (diceToRoll == 4) dice4 = roll_a_dice();
+        if (diceToRoll == 5) dice5 = roll_a_dice();
 
         printf("Rolled dice %d!\n",diceToRoll);
 
