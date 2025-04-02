@@ -46,7 +46,7 @@ int main(void)
         {
             if (isPlayersTurn)
             {
-                printf("Round %d --- Your Turn\n",actualRound);
+                printf("\nRound %d --- Your Turn\n",actualRound);
                 print_line();
 
                 int scoreEarned = play_user(playerScore);
@@ -61,7 +61,7 @@ int main(void)
                 isPlayersTurn = 0;
             }
             else {
-                printf("Round %d --- Computer's Turn\n",actualRound);
+                printf("\nRound %d --- Computer's Turn\n",actualRound);
                 print_line();
 
                 int scoreEarnedComp = play_computer();
@@ -155,59 +155,28 @@ int play_user(int startingTotalScore)
     printf("These would give you %d points \nYour total score would be if you don't reroll %d\n",score, startingTotalScore + score);
 
     //Ask user for re roll
-    char answer;
-    do {
-        printf("Do you want to reroll: (Y/N)? ");
-        scanf(" %c", &answer);
-        getchar(); // To consume newline character
-
-        answer = toupper(answer);
-
-    } while (answer != 'Y' && answer != 'N');
-
-    if (answer == 'Y') {
-        int diceToKeep1 = 0;
-        int diceToKeep2 = 0;
-
-        do {
-            printf("Which ones do you want to keep? ");
-            scanf("%d %d",&diceToKeep1, &diceToKeep2);
-        } while (diceToKeep1 < 1 || diceToKeep1 > 6 || diceToKeep2 < 1 || diceToKeep2 > 6);
-
-
-        //Re-assigning the dice values
-        if (diceToKeep1 != 1 && diceToKeep2 != 1) dice1 = roll_a_dice();
-        if (diceToKeep1 != 2 && diceToKeep2 != 2) dice2 = roll_a_dice();
-        if (diceToKeep1 != 3 && diceToKeep2 != 3) dice3 = roll_a_dice();
-        if (diceToKeep1 != 4 && diceToKeep2 != 4) dice4 = roll_a_dice();
-        if (diceToKeep1 != 5 && diceToKeep2 != 5) dice5 = roll_a_dice();
-
-        printf("\nYou got => [Dice 1:] %d [Dice 2:] %d [Dice 3:] %d [Dice 4:] %d [Dice 5:] %d\n",
-            dice1, dice2, dice3, dice4, dice5);
-
-        score = calculateScore(dice1, dice2, dice3, dice4, dice5);
-        printf("These would give you %d points \nYour total score will be %d\n",score, startingTotalScore + score);
-
-        //Ask for a second reroll
-        char answer2;
+    int rollsLeft = 2;
+    while (rollsLeft > 0)
+    {
+        char answer;
         do {
             printf("Do you want to reroll: (Y/N)? ");
-            scanf(" %c", &answer2);
+            scanf(" %c", &answer);
             getchar(); // To consume newline character
 
-            answer2 = toupper(answer2);
+            answer = toupper(answer);
 
-        } while (answer2 != 'Y' && answer2 != 'N');
+        } while (answer != 'Y' && answer != 'N');
 
-        if (answer2 == 'Y')
-        {
-            int diceToKeep1;
-            int diceToKeep2;
+        if (answer == 'Y') {
+            int diceToKeep1 = 0;
+            int diceToKeep2 = 0;
 
             do {
                 printf("Which ones do you want to keep? ");
                 scanf("%d %d",&diceToKeep1, &diceToKeep2);
-            } while (diceToKeep1 < 1 || diceToKeep1 > 6 || diceToKeep2 < 1 || diceToKeep2 > 6);
+            } while (diceToKeep1 < 1 || diceToKeep1 > 5 || diceToKeep2 < 1 || diceToKeep2 > 5);
+
 
             //Re-assigning the dice values
             if (diceToKeep1 != 1 && diceToKeep2 != 1) dice1 = roll_a_dice();
@@ -221,6 +190,12 @@ int play_user(int startingTotalScore)
 
             score = calculateScore(dice1, dice2, dice3, dice4, dice5);
             printf("These would give you %d points \nYour total score will be %d\n",score, startingTotalScore + score);
+
+            rollsLeft--;
+            }
+        else if (answer == 'N')
+        {
+            rollsLeft = 0;
         }
     }
 
