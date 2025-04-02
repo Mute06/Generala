@@ -15,79 +15,92 @@ int checkForStraight(int d1, int d2, int d3, int d4, int d5);
 int doesItHaveThisValue(int value,int d1,int d2, int d3,int d4,int d5);
 int mostRepeatedNumber(int dice1, int dice2, int dice3, int dice4, int dice5);
 int findOddDice(int d1, int d2, int d3, int d4, int d5);
+void print_line(void);
 
 
 int main(void)
 {
-
-    int numberOfRounds, roundsPlayed = 0;
-    int playerScore = 0;
-    int computerScore = 0;
-    int actualRound = 1;
-
     srand(time(NULL));
+    char answerToPlayAgain;
 
-    printf("How many rounds would you like to play? ");
-    scanf("%d", &numberOfRounds);
-
-    int isPlayersTurn = decideWhoStarts();
-
-    /*1st Question: I used while for game's main loop which is a pre-test loop
+    /*1st Question: I used do-while for game's main loop which is a post-test loop
      *I also used post-test loop do while to ask the user a  Y or N question and to repeat it until the user gives proper input
+     *I used while which is a pre-test loop to repeat the rounds
      *Pre-test loops check the condition before starting to execute the loops body
      *Post-test loops execute the body regardless of the condition at least once and then checks the condition
      */
-
     //Main game loop
-    while (actualRound < numberOfRounds + 1)
-    {
-        if (isPlayersTurn)
+    do {
+        int numberOfRounds, roundsPlayed = 0;
+        int playerScore = 0;
+        int computerScore = 0;
+        int actualRound = 1;
+
+        printf("How many rounds would you like to play? ");
+        scanf("%d", &numberOfRounds);
+
+        int isPlayersTurn = decideWhoStarts();
+
+        //Game loop to play multiple rounds
+        while (actualRound < numberOfRounds + 1)
         {
-            printf("Round %d --- Your Turn\n",actualRound);
-            printf("-----------------------------------------------------------------------------------------------\n");
+            if (isPlayersTurn)
+            {
+                printf("Round %d --- Your Turn\n",actualRound);
+                print_line();
 
-            int scoreEarned = play_user(playerScore);
-            playerScore += scoreEarned;
+                int scoreEarned = play_user(playerScore);
+                playerScore += scoreEarned;
 
-            if (scoreEarned == 50) {
-                //Generala finish the game
-                printf("Generala!\n");
-                actualRound += 999; // to get out of the game loop
+                if (scoreEarned == 50) {
+                    //Generala finish the game
+                    printf("Generala!\n");
+                    actualRound += 999; // to get out of the game loop
+                }
+
+                isPlayersTurn = 0;
             }
+            else {
+                printf("Round %d --- Computer's Turn\n",actualRound);
+                print_line();
 
-            isPlayersTurn = 0;
+                int scoreEarnedComp = play_computer();
+                computerScore += scoreEarnedComp;
+
+                if (scoreEarnedComp == 50) {
+                    //Generala
+                    printf("Generala!\n");
+                    actualRound += 999; // to get out of the game loop
+                }
+
+                printf("Computer got %d points\n Computer's total score: %d\n",scoreEarnedComp,computerScore);
+                isPlayersTurn = 1;
+            }
+            roundsPlayed++;
+
+            if (roundsPlayed % 2 == 0) {
+                actualRound++;
+            }
+        }
+
+        scoresheet(playerScore, computerScore);
+
+        if (playerScore > computerScore) {
+            printf("Player wins\n");
         }
         else {
-            printf("Round %d --- Computer's Turn\n",actualRound);
-            printf("-----------------------------------------------------------------------------------------------\n");
-
-            int scoreEarnedComp = play_computer();
-            computerScore += scoreEarnedComp;
-
-            if (scoreEarnedComp == 50) {
-                //Generala
-                printf("Generala!\n");
-                actualRound += 999; // to get out of the game loop
-            }
-
-            printf("Computer got %d points\n Computer's total score: %d\n",scoreEarnedComp,computerScore);
-            isPlayersTurn = 1;
+            printf("Computer wins\n");
         }
-        roundsPlayed++;
 
-        if (roundsPlayed % 2 == 0) {
-            actualRound++;
-        }
-    }
+        //Ask for replay
+        do {
+            printf("Do you want to play again? ");
+            scanf("\n%c",&answerToPlayAgain);
+            answerToPlayAgain = toupper(answerToPlayAgain);
 
-    scoresheet(playerScore, computerScore);
+        }while (answerToPlayAgain != 'Y' && answerToPlayAgain != 'N');
 
-    if (playerScore > computerScore) {
-        printf("Player wins\n");
-    }
-    else {
-        printf("Computer wins\n");
-    }
+    } while (answerToPlayAgain == 'Y');
 
     return 0;
 }
@@ -156,8 +169,11 @@ int play_user(int startingTotalScore)
         int diceToKeep1 = 0;
         int diceToKeep2 = 0;
 
-        printf("Which ones do you want to keep? ");
-        scanf("%d %d",&diceToKeep1, &diceToKeep2);
+        do {
+            printf("Which ones do you want to keep? ");
+            scanf("%d %d",&diceToKeep1, &diceToKeep2);
+        } while (diceToKeep1 < 1 || diceToKeep1 > 6 || diceToKeep2 < 1 || diceToKeep2 > 6);
+
 
         //Re-assigning the dice values
         if (diceToKeep1 != 1 && diceToKeep2 != 1) dice1 = roll_a_dice();
@@ -188,8 +204,10 @@ int play_user(int startingTotalScore)
             int diceToKeep1;
             int diceToKeep2;
 
-            printf("Which ones do you want to keep? ");
-            scanf("%d %d",&diceToKeep1, &diceToKeep2);
+            do {
+                printf("Which ones do you want to keep? ");
+                scanf("%d %d",&diceToKeep1, &diceToKeep2);
+            } while (diceToKeep1 < 1 || diceToKeep1 > 6 || diceToKeep2 < 1 || diceToKeep2 > 6);
 
             //Re-assigning the dice values
             if (diceToKeep1 != 1 && diceToKeep2 != 1) dice1 = roll_a_dice();
@@ -204,9 +222,6 @@ int play_user(int startingTotalScore)
             score = calculateScore(dice1, dice2, dice3, dice4, dice5);
             printf("These would give you %d points \nYour total score will be %d\n",score, startingTotalScore + score);
         }
-
-
-
     }
 
     return score;
@@ -394,9 +409,13 @@ int findOddDice(int d1, int d2, int d3, int d4, int d5)
     return 0;
 }
 
+void print_line(void) {
+    printf("-----------------------------------------------------------------------------------------------\n");
+}
+
 void scoresheet(int playerScore, int computerScore)
 {
-    printf("-----------------------------------------------------------------------------------------------\n");
+    print_line();
     printf("Computer scores: %d\n",computerScore);
     printf("Player scores: %d\n",playerScore);
 }
