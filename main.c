@@ -36,7 +36,7 @@ int main(void)
         int computerScore = 0;
         int actualRound = 1;
 
-        printf("How many rounds would you like to play? ");
+       printf("How many rounds would you like to play? ");
         scanf("%d", &numberOfRounds);
 
         int isPlayersTurn = decideWhoStarts();
@@ -119,15 +119,15 @@ int decideWhoStarts()
 {
     int playerSum = 0, computerSum = 0;
     do {
-        int startDiceComp_1 = roll_a_dice();
-        int startDiceComp_2 = roll_a_dice();
+        int startDiceComputer1 = roll_a_dice();
+        int startDiceComputer2= roll_a_dice();
         int startDicePlayer_1 = roll_a_dice();
         int startDicePlayer_2 = roll_a_dice();
-        printf("Computer rolled the dice and got: %d and %d\n",startDiceComp_1,startDiceComp_2);
+        printf("Computer rolled the dice and got: %d and %d\n",startDiceComputer1,startDiceComputer2);
         printf("You rolled the dice and got: %d and %d\n",startDicePlayer_1,startDicePlayer_2);
 
         playerSum = startDicePlayer_1 + startDicePlayer_2;
-        computerSum = startDiceComp_1 + startDiceComp_2;
+        computerSum = startDiceComputer1 + startDiceComputer2;
     }
     while (playerSum == computerSum);
 
@@ -293,7 +293,7 @@ int calculateScore(int dice1, int dice2, int dice3, int dice4, int dice5)
     }
 
     //No repeated number
-    if (mostRepeated == 1) {
+    if (equalDiceNumber == 1) {
         return 1;
     }
 
@@ -305,15 +305,12 @@ int calculateScore(int dice1, int dice2, int dice3, int dice4, int dice5)
 int checkForStraight(int d1, int d2, int d3, int d4, int d5)
 {
     // 1 2 3 4 5
-    if (doesItHaveThisValue(1, d1, d2, d3, d4, d5) && doesItHaveThisValue(2, d1, d2, d3, d4, d5)
-        && doesItHaveThisValue(3, d1, d2, d3, d4, d5) && doesItHaveThisValue(4,d1,d2,d3,d4,d5)
-        && doesItHaveThisValue(5, d1, d2, d3, d4, d5))
+    if (d1 == 1 && d2 == 2 && d3 == 3 && d4 == 4 && d5 == 5)
     {
         return 1;
     }
     // 2 3 4 5 6
-    if (doesItHaveThisValue(2,d1,d2,d3,d4,d5) && doesItHaveThisValue(3,d1,d2,d3,d4,d5) && doesItHaveThisValue(4,d1,d2,d3,d4,d5)
-        && doesItHaveThisValue(5,d1,d2,d3,d4,d5) && doesItHaveThisValue(6,d1,d2,d3,d4,d5))
+    if (d1 == 2 && d2 == 3 && d3 == 4 && d4 == 5 && d5 == 6)
     {
         return 1;
     }
